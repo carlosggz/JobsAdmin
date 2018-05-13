@@ -1,0 +1,36 @@
+﻿@using JobsAdmin.Framework.Helpers;
+@using JobsAdmin.Core.Contracts;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Jobs Admin</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        var JobsAdmin = {
+            jobStatus: [],
+            notificationTypes: []
+        };
+
+        @foreach(var status in EnumHelpers.GetAsNameValue(typeof(JobsAdmin.Core.Contracts.JobStatus)))
+        {
+            @:JobsAdmin.jobStatus[@status.Key] = "@status.Value";
+        }
+
+        @foreach(var notificationType in EnumHelpers.GetAsNameValue(typeof(JobsAdmin.Core.Contracts.NotificationType)))
+        {
+            @:JobsAdmin.notificationTypes[@notificationType.Key] = "@notificationType.Value";
+        }
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

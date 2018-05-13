@@ -1,0 +1,8 @@
+﻿.top-margin-20 {
+    margin-top: 20px;
+}
+
+.log-entries {
+    height: 300px;
+    overflow-y: auto;
+}

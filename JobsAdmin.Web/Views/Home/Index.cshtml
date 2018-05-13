@@ -1,0 +1,106 @@
+﻿@using JobsAdmin.Framework.Helpers;
+@using JobsAdmin.Core.Contracts;
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="row" id="rowContent">
+    <h1>Jobs Admin</h1>
+    <hr />
+    <div class="col-xs-12">
+        <button type="button" class="btn btn-default" data-bind="click: addSlowest">Add Slowest Job</button>&nbsp;
+        <button type="button" class="btn btn-default" data-bind="click: addNormal">Add Normal Job</button>
+    </div>
+    <div class="col-xs-12 top-margin-20">
+        <h2>Jobs List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: jobs">
+                <tr>
+                    <td>
+                        <span data-bind="text: name"></span><br />
+                        <span data-bind="text: id"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: statusName"></span>&nbsp;
+                        <span data-bind="text: progress() + '%', visible: statusId() === @JobStatus.InProgress.AsInteger()"></span>
+                        <span data-bind="visible: statusId() === @JobStatus.Waiting.AsInteger()">
+                            <button class="btn btn-link" type="button" data-bind="click: $parent.startJob">
+                                <i class="glyphicon glyphicon-play"></i>
+                            </button>
+                        </span>
+                        <div class="progress" data-bind="visible: statusId() === @JobStatus.InProgress.AsInteger()">
+                            <div class="progress-bar" role="progressbar" data-bind="style: { width: progress()+'%' }">
+                                <span class="sr-only"><span data-bind="text: progress"></span>% Complete</span>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot data-bind="visible: jobs().length === 0">
+                <tr>
+                    <td colspan="2">
+                        No jobs running
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-xs-12" data-bind="visible: logEntries().length">
+        <h2>Log Entries</h2>
+        <ul data-bind="foreach: logEntries" class="list-unstyled log-entries well">
+            <li>
+                <span data-bind="text: id + ' - ' + type + ' - ' + message"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script src="~/Scripts/jobs-handler.js?@DateTime.Now.Ticks"></script>
+    <script type="text/javascript">
+        var jobsHub = null;
+        var vm = null;
+
+        $(function () {
+
+            vm = new jobsHandler({
+                addNormalUrl: "/api/jobs/AddNormal",
+                addSlowestsUrl: "/api/jobs/AddSlowest",
+                startJobUrl: "/api/jobs/Start"
+            });
+
+            jobsHub = $.connection.jobsAdminHub;
+
+            jobsHub.client.updateJob = vm.updateJob;
+            jobsHub.client.addJob = vm.addJob;
+            jobsHub.client.removeJob = vm.removeJob;
+
+            $.connection.hub.logging = true;
+
+            $.connection
+                .hub
+                .start()
+                .done(function () {
+
+                    jobsHub.server.getAllJobs().done(function (jobs) {
+
+                        jobs.forEach(function (job) {
+                            vm.addJob(job);
+                        });
+                    });
+                });
+
+            ko.applyBindings(vm, document.getElementById("rowContent"));
+        });
+
+    </script>
+}
