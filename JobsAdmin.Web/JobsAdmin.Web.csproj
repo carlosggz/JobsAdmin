@@ -186,6 +186,7 @@
     </Compile>
     <Compile Include="Hub\JobsHandler.cs" />
     <Compile Include="Hub\JobsHub.cs" />
+    <Compile Include="Hub\JobScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

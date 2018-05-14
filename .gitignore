@@ -1,0 +1,10 @@
+.vs/
+JobsAdmin.Core/bin/
+JobsAdmin.Core/obj/
+JobsAdmin.Framework/bin/
+JobsAdmin.Framework/obj/
+packages/
+JobsAdmin.Jobs/bin/
+JobsAdmin.Jobs/obj/
+JobsAdmin.Web/bin/
+JobsAdmin.Web/obj/
