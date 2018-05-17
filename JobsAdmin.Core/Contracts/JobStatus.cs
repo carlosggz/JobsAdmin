@@ -11,6 +11,9 @@ namespace JobsAdmin.Core.Contracts
         InProgress,
 
         [Description("Finished")]
-        Finished
+        Finished,
+
+        [Description("Scheduled")]
+        Scheduled
     }
 }

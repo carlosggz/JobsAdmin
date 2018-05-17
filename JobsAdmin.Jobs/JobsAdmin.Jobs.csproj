@@ -43,13 +43,16 @@
     <Compile Include="BaseJob.cs" />
     <Compile Include="NormalJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScheduledJob.cs" />
     <Compile Include="SlowestJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JobsAdmin.Core\JobsAdmin.Core.csproj">
       <Project>{5AE017A5-1008-4231-99DB-CC8B609B4B6C}</Project>
       <Name>JobsAdmin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JobsAdmin.Framework\JobsAdmin.Framework.csproj">
+      <Project>{BA391C6E-A322-40D5-8611-750B331FD04D}</Project>
+      <Name>JobsAdmin.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

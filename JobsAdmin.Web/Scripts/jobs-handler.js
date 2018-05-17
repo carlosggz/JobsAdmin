@@ -63,6 +63,12 @@ function jobsHandler(config) {
         $.post(config.addNormalUrl);
     };
 
+    this.addScheduled = function () {
+
+        $.post(config.addScheduledUrl);
+    };
+
+
     this.startJob = function (job) {
         $.post(config.startJobUrl + "/" + job.id());
     };

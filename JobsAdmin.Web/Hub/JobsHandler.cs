@@ -16,7 +16,7 @@ namespace JobsAdmin.Web.Hub
 
         private readonly ConcurrentDictionary<string, IJob> _jobs = new ConcurrentDictionary<string, IJob>();
 
-        private readonly object _updateStockPricesLock = new object();
+        static readonly object _locker = new object();
 
         private JobsHandler(IHubConnectionContext<dynamic> clients)
         {
@@ -29,8 +29,6 @@ namespace JobsAdmin.Web.Hub
             set;
         }
 
-        private JobInfoDto ToDto(IJob job) => new JobInfoDto() { Id = job.Id, Name = job.Name, Progress = job.Progress, Status = job.Status };
-
         public static JobsHandler Instance => _instance.Value;
 
         public IEnumerable<JobInfoDto> GetAllJobs()
@@ -38,20 +36,20 @@ namespace JobsAdmin.Web.Hub
             return Instance
                 ._jobs
                 .Values
-                .Select(x => ToDto(x))
+                .Select(JobInfoDto.FromJob)
                 .ToList();
         }
 
         public void NotifyAction(NotificationDto notification)
         {
-            Clients.All.updateJob(notification);
+            Clients.All.updateJob(notification);    
         }
 
         public void AddJob(IJob job)
         {
             _jobs[job.Id] = job;
             job.Notify = this;
-            Clients.All.addJob(ToDto(job));
+            Clients.All.addJob(JobInfoDto.FromJob(job));
         }
 
         public void RemoveJob(string id)
@@ -74,6 +72,19 @@ namespace JobsAdmin.Web.Hub
                 return;
 
             _jobs[id].DoWork();
+        }
+
+        public void ProcessSchedule()
+        {
+            lock (_locker)
+            {
+                var jobsToRun = _jobs
+                    .Values
+                    .Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.HasValue && x.NextRunAt.Value <= DateTime.Now);
+
+                foreach (var job in jobsToRun)
+                    job.DoWork();
+            }
         }
     }
 }

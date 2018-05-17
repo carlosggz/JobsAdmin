@@ -27,6 +27,13 @@ namespace JobsAdmin.Web.Controllers
         }
 
         [HttpPost]
+        [Route("AddScheduled")]
+        public void AddScheduled()
+        {
+            JobsHandler.Instance.AddJob(new NormalJob(TimeSpan.FromSeconds(30)));
+        }
+
+        [HttpPost]
         [Route("Start/{id}")]
         public void StartJob(string id)
         {

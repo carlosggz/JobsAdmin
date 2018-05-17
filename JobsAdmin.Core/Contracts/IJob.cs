@@ -14,6 +14,8 @@ namespace JobsAdmin.Core.Contracts
         DateTime? LastActivity { get; }
         string LastMessage { get; }
         INotify Notify { get; set; }
+        TimeSpan? RecurrencePeriod { get; }
+        DateTime? NextRunAt { get; }
 
         void DoWork();
     }

@@ -9,6 +9,7 @@
     <div class="col-xs-12">
         <button type="button" class="btn btn-default" data-bind="click: addSlowest">Add Slowest Job</button>&nbsp;
         <button type="button" class="btn btn-default" data-bind="click: addNormal">Add Normal Job</button>
+        <button type="button" class="btn btn-default" data-bind="click: addScheduled">Add Scheduled Job</button>
     </div>
     <div class="col-xs-12 top-margin-20">
         <h2>Jobs List</h2>
@@ -75,6 +76,7 @@
             vm = new jobsHandler({
                 addNormalUrl: "/api/jobs/AddNormal",
                 addSlowestsUrl: "/api/jobs/AddSlowest",
+                addScheduledUrl: "/api/jobs/AddScheduled",
                 startJobUrl: "/api/jobs/Start"
             });
 

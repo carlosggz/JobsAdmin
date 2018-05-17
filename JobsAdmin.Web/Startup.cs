@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JobsAdmin.Jobs;
@@ -27,12 +28,7 @@ namespace JobsAdmin.Web
 
         private static void OnTimerElapsed(object sender)
         {
-            _jobHost.DoWork(() => 
-            {
-                var job = new ScheduledJob();
-                JobsHandler.Instance.AddJob(job);
-                JobsHandler.Instance.StartJob(job.Id);
-            });
+            _jobHost.DoWork(() => JobsHandler.Instance.ProcessSchedule());
         }
     }
 }
