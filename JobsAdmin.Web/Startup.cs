@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JobsAdmin.Handler;
 using JobsAdmin.Jobs;
 using JobsAdmin.Web.Hub;
 using Microsoft.Owin;

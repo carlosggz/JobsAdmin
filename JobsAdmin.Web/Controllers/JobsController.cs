@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using JobsAdmin.Web.Hub;
+using JobsAdmin.Handler;
 
 namespace JobsAdmin.Web.Controllers
 {

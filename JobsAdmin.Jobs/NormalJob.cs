@@ -5,8 +5,8 @@ namespace JobsAdmin.Jobs
 {
     public class NormalJob : BaseJob
     {
-        public NormalJob(TimeSpan? recurrence = null)
-            : base("Normal Job", recurrence)
+        public NormalJob()
+            : base("Normal Job")
         {}
 
         protected override void Execute()

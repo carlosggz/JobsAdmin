@@ -184,7 +184,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hub\JobsHandler.cs" />
+    <Compile Include="Hub\JobsHandlerNotifier.cs" />
     <Compile Include="Hub\JobsHub.cs" />
     <Compile Include="Hub\JobScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -254,6 +254,10 @@
     <ProjectReference Include="..\JobsAdmin.Framework\JobsAdmin.Framework.csproj">
       <Project>{ba391c6e-a322-40d5-8611-750b331fd04d}</Project>
       <Name>JobsAdmin.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JobsAdmin.Handler\JobsAdmin.Handler.csproj">
+      <Project>{b5eb1951-b0f2-4282-a207-8c5d6b9e98ce}</Project>
+      <Name>JobsAdmin.Handler</Name>
     </ProjectReference>
     <ProjectReference Include="..\JobsAdmin.Jobs\JobsAdmin.Jobs.csproj">
       <Project>{AD93199E-2969-42E4-896C-1DDCE9560FFA}</Project>

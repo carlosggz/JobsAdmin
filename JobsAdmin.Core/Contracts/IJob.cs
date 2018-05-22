@@ -10,12 +10,7 @@ namespace JobsAdmin.Core.Contracts
         string Id { get; }
         string Name { get; }
         int Progress { get; }
-        JobStatus Status { get; }
-        DateTime? LastActivity { get; }
-        string LastMessage { get; }
-        INotify Notify { get; set; }
-        TimeSpan? RecurrencePeriod { get; }
-        DateTime? NextRunAt { get; }
+        IJobNotifier Notifier { get; set; }
 
         void DoWork();
     }
