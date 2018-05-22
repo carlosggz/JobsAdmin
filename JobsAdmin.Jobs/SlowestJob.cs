@@ -8,8 +8,8 @@ namespace JobsAdmin.Jobs
 {
     public class SlowestJob : BaseJob
     {
-        public SlowestJob(TimeSpan? recurrence = null)
-            : base("Slowest Job", recurrence)
+        public SlowestJob()
+            : base("Slowest Job")
         {}
 
         protected override void Execute()
