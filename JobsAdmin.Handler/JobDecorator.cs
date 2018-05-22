@@ -59,8 +59,6 @@ namespace JobsAdmin.Handler
                 Status = JobStatus.InProgress;
             }
 
-            SendNotification(NotificationType.Info, "Starting...", 0);
-
             try
             {
                 _job.DoWork();
@@ -72,7 +70,7 @@ namespace JobsAdmin.Handler
 
             lock (_locker)
             {
-                Status = RecurrencePeriod.HasValue ? JobStatus.Scheduled : JobStatus.Finished;
+                Status = RecurrencePeriod.HasValue ? JobStatus.Scheduled : JobStatus.ReadyToRemove;
             }
 
             if (RecurrencePeriod.HasValue)
@@ -81,7 +79,7 @@ namespace JobsAdmin.Handler
                 SendNotification(NotificationType.Info, "Re-scheduled");
             }
             else
-                SendNotification(NotificationType.Info, "Finished", 100);
+                SendNotification(NotificationType.Info, "Finished");
         }
 
         #endregion

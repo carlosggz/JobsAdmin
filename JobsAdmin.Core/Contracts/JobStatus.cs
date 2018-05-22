@@ -13,6 +13,9 @@ namespace JobsAdmin.Core.Contracts
         [Description("Finished")]
         Finished,
 
+        [Description("Ready to remove")]
+        ReadyToRemove,
+
         [Description("Scheduled")]
         Scheduled
     }

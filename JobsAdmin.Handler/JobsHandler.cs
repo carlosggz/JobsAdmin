@@ -55,10 +55,10 @@ namespace JobsAdmin.Handler
 
         public void NotifyAction(NotificationDto notification)
         {
-            Notifier?.OnJobProgress(notification);
-
-            if (notification.Status == JobStatus.Finished)
+            if (notification.Status == JobStatus.ReadyToRemove)
                 RemoveJob(notification.Id);
+            else
+                Notifier?.OnJobProgress(notification);
         }
 
         #endregion
