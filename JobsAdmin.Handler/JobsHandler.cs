@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JobsAdmin.Handler
@@ -16,7 +17,10 @@ namespace JobsAdmin.Handler
         private readonly static Lazy<JobsHandler> _instance = new Lazy<JobsHandler>(() => new JobsHandler());
 
         private JobsHandler()
-        { }
+        {
+            _timer = new Timer(ProcessSchedule);
+            _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(Framework.Configuration.SystemConfiguration.SchedulerTimeInSeconds));
+        }
 
         public static JobsHandler Instance => _instance.Value;
 
@@ -25,6 +29,7 @@ namespace JobsAdmin.Handler
         #region Private
 
         private readonly ConcurrentDictionary<string, JobDecorator> _jobs = new ConcurrentDictionary<string, JobDecorator>();
+        private readonly Timer _timer = null;
 
         private static readonly object _locker = new object();
 
@@ -49,6 +54,25 @@ namespace JobsAdmin.Handler
             };
         }
 
+        private void ProcessSchedule(object sender)
+        {
+            if (this.Hosting == null)
+                return;
+
+            lock (_locker)
+            {
+                this.Hosting.DoWork(() =>
+                {
+                    var jobsToRun = _jobs
+                        .Values
+                        .Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.HasValue && x.NextRunAt.Value <= DateTime.Now);
+
+                    foreach (var job in jobsToRun)
+                        job.DoWork();
+                });
+            }
+        }
+
         #endregion
 
         #region IJobNotifier
@@ -66,6 +90,8 @@ namespace JobsAdmin.Handler
         #region IJobsHandler
 
         public IJobsHandlerNotifier Notifier { get; set; }
+
+        public ISchedulerHosting Hosting { get; set; }
 
         public IEnumerable<JobInfoDto> GetAllJobs()
         {
@@ -90,19 +116,6 @@ namespace JobsAdmin.Handler
                 return;
 
             _jobs[id].DoWork();
-        }
-
-        public void ProcessSchedule()
-        {
-            lock (_locker)
-            {
-                var jobsToRun = _jobs
-                    .Values
-                    .Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.HasValue && x.NextRunAt.Value <= DateTime.Now);
-
-                foreach (var job in jobsToRun)
-                    job.DoWork();
-            }
         }
 
         #endregion

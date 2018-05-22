@@ -1,9 +1,10 @@
-﻿using System;
+﻿using JobsAdmin.Core.Contracts;
+using System;
 using System.Web.Hosting;
 
 namespace JobsAdmin.Web.Hub
 {
-    public class JobScheduler : IRegisteredObject
+    public class JobScheduler : IRegisteredObject, ISchedulerHosting
     {
         private readonly object _lock = new object();
         private bool _shuttingDown;

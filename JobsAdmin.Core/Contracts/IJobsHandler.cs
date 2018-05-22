@@ -9,8 +9,8 @@ namespace JobsAdmin.Core.Contracts
     {
         void AddJob(IJob job, TimeSpan? recurrence = null);
         IEnumerable<JobInfoDto> GetAllJobs();
-        void ProcessSchedule();
         void StartJob(string id);
         IJobsHandlerNotifier Notifier { get; set; }
+        ISchedulerHosting Hosting { get; set; }
     }
 }

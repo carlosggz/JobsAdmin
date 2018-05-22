@@ -44,6 +44,7 @@
     <Compile Include="Contracts\IJobNotifier.cs" />
     <Compile Include="Contracts\IJobsHandler.cs" />
     <Compile Include="Contracts\IJobsHandlerNotifier.cs" />
+    <Compile Include="Contracts\ISchedulerHosting.cs" />
     <Compile Include="Contracts\JobStatus.cs" />
     <Compile Include="Contracts\NotificationType.cs" />
     <Compile Include="Dtos\JobInfoDto.cs" />

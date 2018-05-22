@@ -24,12 +24,12 @@ namespace JobsAdmin.Web
     public class Startup
     {
         private static IJobsHandler _handler = null;
-        private static readonly Timer _timer = new Timer(OnTimerElapsed);
         private static readonly JobScheduler _jobHost = new JobScheduler();
 
         public void Configuration(IAppBuilder app)
         {
             _handler = JobsHandler.Instance;
+            _handler.Hosting = _jobHost;
 
             var builder = new ContainerBuilder();
             builder.RegisterHubs(Assembly.GetExecutingAssembly()).PropertiesAutowired();
@@ -50,14 +50,6 @@ namespace JobsAdmin.Web
             {
                 Resolver = signalResolver
             });
-
-            //Scheduler
-            _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(Framework.Configuration.SystemConfiguration.SchedulerTimeInSeconds));
-        }
-
-        private static void OnTimerElapsed(object sender)
-        {
-            _jobHost.DoWork(() => _handler.ProcessSchedule());
         }
     }
 }
