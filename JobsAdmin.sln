@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsAdmin.Web", "JobsAdmin.Web\JobsAdmin.Web.csproj", "{8F4C6A41-E360-4B99-A7EE-643847ECB628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsAdmin.Core", "JobsAdmin.Core\JobsAdmin.Core.csproj", "{5AE017A5-1008-4231-99DB-CC8B609B4B6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsAdmin.Core", "JobsAdmin.Core\JobsAdmin.Core.csproj", "{5AE017A5-1008-4231-99DB-CC8B609B4B6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsAdmin.Jobs", "JobsAdmin.Jobs\JobsAdmin.Jobs.csproj", "{AD93199E-2969-42E4-896C-1DDCE9560FFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsAdmin.Jobs", "JobsAdmin.Jobs\JobsAdmin.Jobs.csproj", "{AD93199E-2969-42E4-896C-1DDCE9560FFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsAdmin.Framework", "JobsAdmin.Framework\JobsAdmin.Framework.csproj", "{BA391C6E-A322-40D5-8611-750B331FD04D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsAdmin.Framework", "JobsAdmin.Framework\JobsAdmin.Framework.csproj", "{BA391C6E-A322-40D5-8611-750B331FD04D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobsAdmin.Handler", "JobsAdmin.Handler\JobsAdmin.Handler.csproj", "{B5EB1951-B0F2-4282-A207-8C5D6B9E98CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobsAdmin.Handler", "JobsAdmin.Handler\JobsAdmin.Handler.csproj", "{B5EB1951-B0F2-4282-A207-8C5D6B9E98CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

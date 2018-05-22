@@ -14,12 +14,13 @@ namespace JobsAdmin.Handler
     {
         #region Singleton Methods
 
+        private const int SchedulerTimeInSeconds = 30;
         private readonly static Lazy<JobsHandler> _instance = new Lazy<JobsHandler>(() => new JobsHandler());
 
         private JobsHandler()
         {
             _timer = new Timer(ProcessSchedule);
-            _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(Framework.Configuration.SystemConfiguration.SchedulerTimeInSeconds));
+            _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(SchedulerTimeInSeconds));
         }
 
         public static JobsHandler Instance => _instance.Value;
