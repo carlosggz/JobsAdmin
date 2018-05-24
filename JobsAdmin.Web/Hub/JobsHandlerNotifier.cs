@@ -1,31 +1,34 @@
 ﻿using JobsAdmin.Core.Contracts;
 using JobsAdmin.Core.Dtos;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace JobsAdmin.Web.Hub
 {
     public class JobsHandlerNotifier : IJobsHandlerNotifier
     {
-        private readonly IHubConnectionContext<dynamic> _clients;
+        private readonly IConnectionManager _connectionManager = null;
+        private IHubConnectionContext<dynamic> Clients => _connectionManager.GetHubContext<JobsHub>().Clients;
 
-        public JobsHandlerNotifier(IHubConnectionContext<dynamic> clients)
+        public JobsHandlerNotifier(IConnectionManager connectionManager)
         {
-            _clients = clients;
-        }        
+            _connectionManager = connectionManager;
+        }
 
         public void OnJobAdded(JobInfoDto jobInfo)
         {
-            _clients.All.addJob(jobInfo);
+            Clients.All.addJob(jobInfo);
         }
 
         public void OnJobProgress(NotificationDto notification)
         {
-            _clients.All.updateJob(notification);
+            Clients.All.updateJob(notification);
         }
 
         public void OnJobRemoved(string id)
         {
-            _clients.All.removeJob(id);
+            Clients.All.removeJob(id);
         }
     }
 }

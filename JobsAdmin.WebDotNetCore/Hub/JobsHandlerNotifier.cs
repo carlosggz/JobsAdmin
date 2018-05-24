@@ -10,26 +10,32 @@ namespace JobsAdmin.WebDotNetCore.Hub
 {
     public class JobsHandlerNotifier : IJobsHandlerNotifier
     {
-        private readonly IHubClients _clients;
+        private readonly IServiceProvider _serviceProvider = null;
+        private IHubClients Clients => Get<IHubContext<JobsHub>>().Clients;
 
-        public JobsHandlerNotifier(IHubClients clients)
+        public JobsHandlerNotifier(IServiceProvider serviceProvider)
         {
-            _clients = clients;
+            _serviceProvider = serviceProvider;
+        }
+
+        private T Get<T>() where T: class
+        {
+            return _serviceProvider.GetService(typeof(T)) as T;
         }
 
         public void OnJobAdded(JobInfoDto jobInfo)
         {
-            _clients.All.SendAsync("addJob", jobInfo);
+            Clients.All.SendAsync("addJob", jobInfo);
         }
 
         public void OnJobProgress(NotificationDto notification)
         {
-            _clients.All.SendAsync("updateJob", notification);
+            Clients.All.SendAsync("updateJob", notification);
         }
 
         public void OnJobRemoved(string id)
         {
-            _clients.All.SendAsync("removeJob", id);
+            Clients.All.SendAsync("removeJob", id);
         }
     }
 }

@@ -23,19 +23,15 @@ namespace JobsAdmin.Web
 {
     public class Startup
     {
-        private static IJobsHandler _handler = null;
-        private static readonly JobScheduler _jobHost = new JobScheduler();
-
         public void Configuration(IAppBuilder app)
         {
-            _handler = JobsHandler.Instance;
-            _handler.Hosting = _jobHost;
+            var handler = JobsHandler.Instance;
 
             var builder = new ContainerBuilder();
             builder.RegisterHubs(Assembly.GetExecutingAssembly()).PropertiesAutowired();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();
-            builder.RegisterInstance(_handler).As<IJobsHandler>();
+            builder.RegisterInstance(handler).As<IJobsHandler>();
 
             var container = builder.Build();
 
@@ -50,6 +46,9 @@ namespace JobsAdmin.Web
             {
                 Resolver = signalResolver
             });
+
+            handler.Hosting = new JobScheduler();
+            handler.Notifier = new JobsHandlerNotifier(GlobalHost.ConnectionManager);
         }
     }
 }

@@ -17,10 +17,9 @@ namespace JobsAdmin.WebDotNetCore.Controllers
     {
         private IJobsHandler _handler = null;
 
-        public JobsController(IJobsHandler handler, IHubContext<JobsHub> hubContext)
+        public JobsController(IJobsHandler handler)
         {
             _handler = handler;
-            _handler.Notifier = new JobsHandlerNotifier(hubContext.Clients);
         }
 
         [HttpPost]

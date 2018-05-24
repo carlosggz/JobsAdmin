@@ -11,18 +11,17 @@ namespace JobsAdmin.Web.Hub
     public class JobsHub : HubBase
     {
         private readonly ILifetimeScope _hubLifetimeScope;
-        private readonly IJobsHandler _handler;
 
         public JobsHub(ILifetimeScope lifetimeScope)
         {
             _hubLifetimeScope = lifetimeScope.BeginLifetimeScope();
-            _handler = _hubLifetimeScope.Resolve<IJobsHandler>();
-            _handler.Notifier = new JobsHandlerNotifier(GlobalHost.ConnectionManager.GetHubContext<JobsHub>().Clients);
         }
 
         public IEnumerable<JobInfoDto> GetAllJobs()
         {
-            return _handler.GetAllJobs();
+            return _hubLifetimeScope
+                .Resolve<IJobsHandler>()
+                .GetAllJobs();
         }
 
         protected override void Dispose(bool disposing)

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="npm install &amp;&amp; npm run gulp&#xD;&#xA;" />
+    <Exec Command="npm install &amp;&amp; npm run gulp" />
   </Target>
 
 </Project>
