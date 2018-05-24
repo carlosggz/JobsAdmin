@@ -10,3 +10,6 @@ JobsAdmin.Web/bin/
 JobsAdmin.Web/obj/
 JobsAdmin.Handler/bin/
 JobsAdmin.Handler/obj/
+JobsAdmin.WebDotNetCore/bin/
+JobsAdmin.WebDotNetCore/obj/
+JobsAdmin.WebDotNetCore/node_modules/

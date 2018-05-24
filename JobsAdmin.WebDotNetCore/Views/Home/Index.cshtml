@@ -1,0 +1,109 @@
+﻿@using JobsAdmin.Framework.Helpers;
+@using JobsAdmin.Core.Contracts;
+@{
+    ViewBag.Title = "Home Page";
+}
+<div class="row" id="rowContent">
+    <h1>Jobs Admin</h1>
+    <hr />
+    <div class="col-xs-12">
+        <button type="button" class="btn btn-default" data-bind="click: addSlowest">Add Slowest Job</button>&nbsp;
+        <button type="button" class="btn btn-default" data-bind="click: addNormal">Add Normal Job</button>
+        <button type="button" class="btn btn-default" data-bind="click: addScheduled">Add Scheduled Job</button>
+    </div>
+    <div class="col-xs-12 top-margin-20">
+        <h2>Jobs List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: jobs">
+                <tr>
+                    <td>
+                        <span data-bind="text: name"></span><br />
+                        <span data-bind="text: id"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: statusName"></span>&nbsp;
+                        <span data-bind="text: progress() + '%', visible: statusId() === @JobStatus.InProgress.AsInteger()"></span>
+                        <span data-bind="visible: statusId() === @JobStatus.Waiting.AsInteger()">
+                            <button class="btn btn-link" type="button" data-bind="click: $parent.startJob">
+                                <i class="glyphicon glyphicon-play"></i>
+                            </button>
+                        </span>
+                        <div class="progress" data-bind="visible: statusId() === @JobStatus.InProgress.AsInteger()">
+                            <div class="progress-bar" role="progressbar" data-bind="style: { width: progress()+'%' }">
+                                <span class="sr-only"><span data-bind="text: progress"></span>% Complete</span>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot data-bind="visible: jobs().length === 0">
+                <tr>
+                    <td colspan="2">
+                        No jobs running
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-xs-12" data-bind="visible: logEntries().length">
+        <h2>Log Entries</h2>
+        <ul data-bind="foreach: logEntries" class="list-unstyled log-entries well">
+            <li>
+                <span data-bind="text: id + ' - ' + type + ' - ' + message"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+@section scripts
+    {
+    <script src="~/lib/js/knockout.min.js"></script>
+    <script src="~/lib/js/signalr.min.js"></script>
+    <script src="~/js/jobs-handler.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        var jobsHub = null;
+        var vm = null;
+
+        $(function () {
+
+            vm = new jobsHandler({
+                addNormalUrl: "/api/jobs/AddNormal",
+                addSlowestsUrl: "/api/jobs/AddSlowest",
+                addScheduledUrl: "/api/jobs/AddScheduled",
+                startJobUrl: "/api/jobs/Start"
+            });
+
+            jobsHub = new signalR.HubConnectionBuilder()
+                .withUrl("/jobshub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            jobsHub.on("updateJob", vm.updateJob);
+            jobsHub.on("addJob", vm.addJob);
+            jobsHub.on("removeJob", vm.removeJob);
+
+            jobsHub
+                .start()
+                .then(function () {
+
+                    jobsHub
+                        .invoke("getAllJobs")
+                        .then(function (jobs) {
+
+                            jobs.forEach(function (job) {
+                                vm.addJob(job);
+                            });
+                        });
+            });
+
+            ko.applyBindings(vm, document.getElementById("rowContent"));
+        });
+
+    </script>
+}
