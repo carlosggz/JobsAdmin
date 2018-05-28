@@ -4,8 +4,8 @@ namespace JobsAdmin.Core.Contracts
 {
     public enum JobStatus: int
     {
-        [Description("Waiting")]
-        Waiting,
+        [Description("In queued")]
+        InQueued,
 
         [Description("In progress")]
         InProgress,

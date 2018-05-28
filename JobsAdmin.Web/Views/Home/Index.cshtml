@@ -29,11 +29,6 @@
                     <td>
                         <span data-bind="text: statusName"></span>&nbsp;
                         <span data-bind="text: progress() + '%', visible: statusId() === @JobStatus.InProgress.AsInteger()"></span>
-                        <span data-bind="visible: statusId() === @JobStatus.Waiting.AsInteger()">
-                            <button class="btn btn-link" type="button" data-bind="click: $parent.startJob">
-                                <i class="glyphicon glyphicon-play"></i>
-                            </button>
-                        </span>
                         <div class="progress" data-bind="visible: statusId() === @JobStatus.InProgress.AsInteger()">
                             <div class="progress-bar" role="progressbar" data-bind="style: { width: progress()+'%' }">
                                 <span class="sr-only"><span data-bind="text: progress"></span>% Complete</span>
@@ -76,8 +71,7 @@
             vm = new jobsHandler({
                 addNormalUrl: "/api/jobs/AddNormal",
                 addSlowestsUrl: "/api/jobs/AddSlowest",
-                addScheduledUrl: "/api/jobs/AddScheduled",
-                startJobUrl: "/api/jobs/Start"
+                addScheduledUrl: "/api/jobs/AddScheduled"
             });
 
             jobsHub = $.connection.jobsAdminHub;

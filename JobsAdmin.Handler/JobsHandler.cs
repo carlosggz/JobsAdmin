@@ -12,9 +12,15 @@ namespace JobsAdmin.Handler
 {
     public class JobsHandler : IJobsHandler, IJobNotifier
     {
-        #region Singleton Methods
+        #region Constants
 
         private const int SchedulerTimeInSeconds = 30;
+        private const int MaxJobsRunning = 3;
+        
+        #endregion
+
+        #region Singleton Methods
+
         private readonly static Lazy<JobsHandler> _instance = new Lazy<JobsHandler>(() => new JobsHandler());
 
         private JobsHandler()
@@ -64,14 +70,33 @@ namespace JobsAdmin.Handler
             {
                 this.Hosting.DoWork(() =>
                 {
-                    var jobsToRun = _jobs
-                        .Values
-                        .Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.HasValue && x.NextRunAt.Value <= DateTime.Now);
+                    var runningJobs = GetRunningJobsCount();
 
-                    foreach (var job in jobsToRun)
-                        job.DoWork();
+                    if (runningJobs >= MaxJobsRunning)
+                        return;
+
+                    foreach (var job in GetJobsTuRun(MaxJobsRunning - runningJobs))
+                        new Task(() => job.DoWork()).Start();
                 });
             }
+        }
+
+        private void StartJob(string id)
+        {
+            if (!_jobs.ContainsKey(id))
+                return;
+
+            _jobs[id].DoWork();
+        }
+
+        private int GetRunningJobsCount() => _jobs.Count(x => x.Value.Status == JobStatus.InProgress);
+
+        private IEnumerable<JobDecorator> GetJobsTuRun(int max)
+        {
+            var toRun = new List<JobDecorator>();
+            toRun.AddRange(_jobs.Values.Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.Value <= DateTime.Now));
+            toRun.AddRange(_jobs.Values.Where(x => x.Status == JobStatus.InQueued));
+            return toRun.Take(max);
         }
 
         #endregion
@@ -109,14 +134,6 @@ namespace JobsAdmin.Handler
             _jobs[decoratedJob.Id] = decoratedJob;
             decoratedJob.Notifier = this;
             Notifier?.OnJobAdded(FromJob(decoratedJob));
-        }
-
-        public void StartJob(string id)
-        {
-            if (!_jobs.ContainsKey(id))
-                return;
-
-            _jobs[id].DoWork();
         }
 
         #endregion

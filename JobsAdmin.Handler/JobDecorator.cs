@@ -29,7 +29,7 @@ namespace JobsAdmin.Handler
             ReSchedule();
         }
 
-        public JobStatus Status { get; private set; } = JobStatus.Waiting;
+        public JobStatus Status { get; private set; } = JobStatus.InQueued;
         public DateTime? LastActivity { get; private set; } = null;
         public string LastMessage { get; private set; } = null;
         public TimeSpan? RecurrencePeriod { get; private set; } = null;

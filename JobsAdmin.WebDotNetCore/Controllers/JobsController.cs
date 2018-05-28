@@ -42,12 +42,5 @@ namespace JobsAdmin.WebDotNetCore.Controllers
         {
             _handler.AddJob(new NormalJob(), TimeSpan.FromSeconds(30));
         }
-
-        [HttpPost]
-        [Route("Start/{id}")]
-        public void StartJob(string id)
-        {
-            _handler.StartJob(id);
-        }
     }
 }

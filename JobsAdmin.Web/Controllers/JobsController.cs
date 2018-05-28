@@ -36,12 +36,5 @@ namespace JobsAdmin.Web.Controllers
         {
             Handler.AddJob(new NormalJob(), TimeSpan.FromSeconds(30));
         }
-
-        [HttpPost]
-        [Route("Start/{id}")]
-        public void StartJob(string id)
-        {
-            Handler.StartJob(id);
-        }
     }
 }
