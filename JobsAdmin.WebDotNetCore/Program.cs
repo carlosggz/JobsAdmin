@@ -19,7 +19,9 @@ namespace JobsAdmin.WebDotNetCore
             var webhost = BuildWebHost(args);
             var handler = webhost.Services.GetService(typeof(IJobsHandler)) as IJobsHandler;
             handler.Hosting = new JobScheduler(webhost);
-            handler.Notifier = new JobsHandlerNotifier(webhost.Services);
+            handler.NotificationsBroker.Subscribe(new SignalRNotifier(webhost.Services));
+            handler.NotificationsBroker.Subscribe(new EmailNotifier());
+            handler.NotificationsBroker.Subscribe(new LoggingNotifier());
             webhost.Run();
         }
 

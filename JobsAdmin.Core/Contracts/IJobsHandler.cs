@@ -9,7 +9,7 @@ namespace JobsAdmin.Core.Contracts
     {
         void AddJob(IJob job, TimeSpan? recurrence = null);
         IEnumerable<JobInfoDto> GetAllJobs();
-        IJobsHandlerNotifier Notifier { get; set; }
+        INotificationsBroker NotificationsBroker{ get; }
         ISchedulerHosting Hosting { get; set; }
     }
 }

@@ -48,7 +48,9 @@ namespace JobsAdmin.Web
             });
 
             handler.Hosting = new JobScheduler();
-            handler.Notifier = new JobsHandlerNotifier(GlobalHost.ConnectionManager);
+            handler.NotificationsBroker.Subscribe(new SignalRNotifier(GlobalHost.ConnectionManager));
+            handler.NotificationsBroker.Subscribe(new EmailNotifier());
+            handler.NotificationsBroker.Subscribe(new LoggingNotifier());
         }
     }
 }
