@@ -6,12 +6,12 @@ using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace JobsAdmin.Web.Hub
 {
-    public class JobsHandlerNotifier : IJobsHandlerNotifier
+    public class SignalRNotifier : IJobsHandlerNotifier
     {
         private readonly IConnectionManager _connectionManager = null;
         private IHubConnectionContext<dynamic> Clients => _connectionManager.GetHubContext<JobsHub>().Clients;
 
-        public JobsHandlerNotifier(IConnectionManager connectionManager)
+        public SignalRNotifier(IConnectionManager connectionManager)
         {
             _connectionManager = connectionManager;
         }

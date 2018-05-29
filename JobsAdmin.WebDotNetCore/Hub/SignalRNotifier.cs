@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace JobsAdmin.WebDotNetCore.Hub
 {
-    public class JobsHandlerNotifier : IJobsHandlerNotifier
+    public class SignalRNotifier : IJobsHandlerNotifier
     {
         private readonly IServiceProvider _serviceProvider = null;
         private IHubClients Clients => Get<IHubContext<JobsHub>>().Clients;
 
-        public JobsHandlerNotifier(IServiceProvider serviceProvider)
+        public SignalRNotifier(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

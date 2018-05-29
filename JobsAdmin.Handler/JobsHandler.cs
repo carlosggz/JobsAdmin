@@ -27,6 +27,8 @@ namespace JobsAdmin.Handler
         {
             _timer = new Timer(ProcessSchedule);
             _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(SchedulerTimeInSeconds));
+
+            _notificationsBroker = new NotificationsBroker();
         }
 
         public static JobsHandler Instance => _instance.Value;
@@ -37,7 +39,7 @@ namespace JobsAdmin.Handler
 
         private readonly ConcurrentDictionary<string, JobDecorator> _jobs = new ConcurrentDictionary<string, JobDecorator>();
         private readonly Timer _timer = null;
-
+        private readonly NotificationsBroker _notificationsBroker = null;
         private static readonly object _locker = new object();
 
         private void RemoveJob(string id)
@@ -46,7 +48,7 @@ namespace JobsAdmin.Handler
                 return;
 
             job.Notifier = null;
-            Notifier?.OnJobRemoved(id);
+            _notificationsBroker.OnJobRemoved(id);
         }
 
         private static JobInfoDto FromJob(JobDecorator job)
@@ -108,14 +110,14 @@ namespace JobsAdmin.Handler
             if (notification.Status == JobStatus.ReadyToRemove)
                 RemoveJob(notification.Id);
             else
-                Notifier?.OnJobProgress(notification);
+                _notificationsBroker.OnJobProgress(notification);
         }
 
         #endregion
 
         #region IJobsHandler
 
-        public IJobsHandlerNotifier Notifier { get; set; }
+        public INotificationsBroker NotificationsBroker => _notificationsBroker;
 
         public ISchedulerHosting Hosting { get; set; }
 
@@ -133,7 +135,7 @@ namespace JobsAdmin.Handler
             var decoratedJob = new JobDecorator(job, recurrence);
             _jobs[decoratedJob.Id] = decoratedJob;
             decoratedJob.Notifier = this;
-            Notifier?.OnJobAdded(FromJob(decoratedJob));
+            _notificationsBroker.OnJobAdded(FromJob(decoratedJob));
         }
 
         #endregion
