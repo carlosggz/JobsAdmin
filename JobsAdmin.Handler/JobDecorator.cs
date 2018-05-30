@@ -13,7 +13,7 @@ namespace JobsAdmin.Handler
     {
         #region Private fields
 
-        static readonly object _locker = new object();
+        private readonly object _locker = new object();
         private readonly IJob _job = null;
 
         #endregion
