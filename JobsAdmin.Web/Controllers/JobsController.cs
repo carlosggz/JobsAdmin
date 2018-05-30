@@ -34,7 +34,7 @@ namespace JobsAdmin.Web.Controllers
         [Route("AddScheduled")]
         public void AddScheduled()
         {
-            Handler.AddJob(new NormalJob(), TimeSpan.FromSeconds(30));
+            Handler.AddJob(new NormalJob(), 1);
         }
     }
 }

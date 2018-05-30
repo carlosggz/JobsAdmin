@@ -59,7 +59,7 @@ namespace JobsAdmin.Handler
                 Name = job.Name,
                 Progress = job.Progress,
                 Status = job.Status,
-                ScheduleAt = job.NextRunAt
+                ScheduledAt = job.RecurrencePeriod?.NextRunAt
             };
         }
 
@@ -96,9 +96,20 @@ namespace JobsAdmin.Handler
         private IEnumerable<JobDecorator> GetJobsTuRun(int max)
         {
             var toRun = new List<JobDecorator>();
-            toRun.AddRange(_jobs.Values.Where(x => x.Status == JobStatus.Scheduled && x.NextRunAt.Value <= DateTime.Now));
+            toRun.AddRange(_jobs.Values.Where(x => x.Status == JobStatus.Scheduled && x.RecurrencePeriod.NextRunAt <= DateTime.Now));
             toRun.AddRange(_jobs.Values.Where(x => x.Status == JobStatus.InQueued));
             return toRun.Take(max);
+        }
+
+        private void EnQueueJob(IJob job, Recurrence recurrence)
+        {
+            if (job == null)
+                return;
+
+            var decoratedJob = new JobDecorator(job, recurrence);
+            _jobs[decoratedJob.Id] = decoratedJob;
+            decoratedJob.Notifier = this;
+            _notificationsBroker.OnJobAdded(FromJob(decoratedJob));
         }
 
         #endregion
@@ -130,12 +141,24 @@ namespace JobsAdmin.Handler
                 .ToList();
         }
 
-        public void AddJob(IJob job, TimeSpan? recurrence = null)
+        public void AddJob(IJob job, int? recurrenceInMinutes = null)
         {
-            var decoratedJob = new JobDecorator(job, recurrence);
-            _jobs[decoratedJob.Id] = decoratedJob;
-            decoratedJob.Notifier = this;
-            _notificationsBroker.OnJobAdded(FromJob(decoratedJob));
+            EnQueueJob(job, !recurrenceInMinutes.HasValue ? null : Recurrence.BuildFromMinutes(recurrenceInMinutes.Value));
+        }
+
+        public void AddDailyJob(IJob job, int hour)
+        {
+            EnQueueJob(job, Recurrence.BuildDaily(hour));
+        }
+
+        public void AddWeeklyJob(IJob job, DayOfWeek dayOfWeek, int hour)
+        {
+            EnQueueJob(job, Recurrence.BuildWeekly(dayOfWeek, hour));
+        }
+
+        public void AddMonthlyJob(IJob job, int hour)
+        {
+            EnQueueJob(job, Recurrence.BuildMonthly(hour));
         }
 
         #endregion

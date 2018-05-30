@@ -1,4 +1,5 @@
 ﻿using JobsAdmin.Core.Contracts;
+using System;
 
 namespace JobsAdmin.Core.Dtos
 {
@@ -9,5 +10,6 @@ namespace JobsAdmin.Core.Dtos
         public NotificationType NotificationType { get; set; }
         public int Progress { get; set; }
         public JobStatus Status { get; set; }
+        public DateTime? ScheduledAt { get; set; }
     }
 }

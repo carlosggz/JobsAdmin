@@ -18,22 +18,17 @@ namespace JobsAdmin.Handler
 
         #endregion
 
-        public JobDecorator(IJob job, TimeSpan? recurrence = null)
+        public JobDecorator(IJob job, Recurrence recurrence = null)
         {
             _job = job ?? throw new InvalidParametersException();
-
-            if (!recurrence.HasValue)
-                return;
-
             RecurrencePeriod = recurrence;
-            ReSchedule();
+            Status = recurrence == null ? JobStatus.InQueued : JobStatus.Scheduled;
         }
 
         public JobStatus Status { get; private set; } = JobStatus.InQueued;
         public DateTime? LastActivity { get; private set; } = null;
         public string LastMessage { get; private set; } = null;
-        public TimeSpan? RecurrencePeriod { get; private set; } = null;
-        public DateTime? NextRunAt { get; private set; } = null;
+        public Recurrence RecurrencePeriod { get; private set; } = null;
 
         #region IJob
 
@@ -70,13 +65,13 @@ namespace JobsAdmin.Handler
 
             lock (_locker)
             {
-                Status = RecurrencePeriod.HasValue ? JobStatus.Scheduled : JobStatus.ReadyToRemove;
+                Status = RecurrencePeriod != null ? JobStatus.Scheduled : JobStatus.ReadyToRemove;
             }
 
-            if (RecurrencePeriod.HasValue)
+            if (RecurrencePeriod != null)
             {
-                ReSchedule();
-                SendNotification(NotificationType.Info, "Re-scheduled");
+                RecurrencePeriod.ReSchedule();
+                SendNotification(NotificationType.Info, "Re-scheduled at " + RecurrencePeriod.NextRunAt.ToString("MM/dd/yyyy H:mm"));
             }
             else
                 SendNotification(NotificationType.Info, "Finished");
@@ -86,12 +81,6 @@ namespace JobsAdmin.Handler
 
         #region Private
 
-        private void ReSchedule()
-        {
-            NextRunAt = DateTime.Now.Add(RecurrencePeriod.Value);
-            Status = JobStatus.Scheduled;
-        }
-
         protected void SendNotification(NotificationType notificationType, string message, int? progress = null)
         {
             Notifier?.NotifyAction(new NotificationDto()
@@ -100,7 +89,8 @@ namespace JobsAdmin.Handler
                 Message = message,
                 NotificationType = notificationType,
                 Progress = progress ?? Progress,
-                Status = Status
+                Status = Status,
+                ScheduledAt = Status == JobStatus.Scheduled ? (DateTime?)RecurrencePeriod.NextRunAt : null
             });
 
             LastActivity = DateTime.Now;

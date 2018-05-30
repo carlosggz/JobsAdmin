@@ -51,6 +51,11 @@ namespace JobsAdmin.Web
             handler.NotificationsBroker.Subscribe(new SignalRNotifier(GlobalHost.ConnectionManager));
             handler.NotificationsBroker.Subscribe(new EmailNotifier());
             handler.NotificationsBroker.Subscribe(new LoggingNotifier());
+
+            handler.AddJob(new NormalJob(), 60);
+            handler.AddDailyJob(new NormalJob(), 23);
+            handler.AddWeeklyJob(new NormalJob(), DayOfWeek.Monday, 21);
+            handler.AddMonthlyJob(new NormalJob(), 0);
         }
     }
 }

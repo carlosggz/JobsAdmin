@@ -28,6 +28,7 @@
                     </td>
                     <td>
                         <span data-bind="text: statusName"></span>&nbsp;
+                        <span data-bind="text: 'at ' + scheduledAtMessage(), visible: statusId() === @JobStatus.Scheduled.AsInteger()"></span>&nbsp;
                         <span data-bind="text: progress() + '%', visible: statusId() === @JobStatus.InProgress.AsInteger()"></span>
                         <div class="progress" data-bind="visible: statusId() === @JobStatus.InProgress.AsInteger()">
                             <div class="progress-bar" role="progressbar" data-bind="style: { width: progress()+'%' }">
@@ -80,7 +81,7 @@
             jobsHub.client.addJob = vm.addJob;
             jobsHub.client.removeJob = vm.removeJob;
 
-            $.connection.hub.logging = true;
+            //$.connection.hub.logging = true;
 
             $.connection
                 .hub

@@ -40,7 +40,7 @@ namespace JobsAdmin.WebDotNetCore.Controllers
         [Route("AddScheduled")]
         public void AddScheduled()
         {
-            _handler.AddJob(new NormalJob(), TimeSpan.FromSeconds(30));
+            _handler.AddJob(new NormalJob(), 1);
         }
     }
 }

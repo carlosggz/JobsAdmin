@@ -13,6 +13,6 @@ namespace JobsAdmin.Core.Dtos
         public string Name { get; set; }
         public int Progress { get; set; }
         public JobStatus Status { get; set; }
-        public DateTime? ScheduleAt { get; set; }
+        public DateTime? ScheduledAt { get; set; }
     }
 }

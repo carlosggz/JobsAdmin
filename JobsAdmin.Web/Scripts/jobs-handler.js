@@ -1,10 +1,29 @@
 ﻿function jobItem(job) {
 
+    var self = this;
+
+    this.getDateFormatted = function (date) {
+
+        return (date.getMonth() + 1) + "/" +
+            date.getDate() + "/" +
+            date.getFullYear() + " " +
+            date.getHours() + ":" +
+            date.getMinutes();
+    };
+
     this.id = ko.observable(job.Id);
     this.name = ko.observable(job.Name);
     this.progress = ko.observable(job.Progress);
     this.statusId = ko.observable(job.Status);
     this.statusName = ko.observable(JobsAdmin.jobStatus[job.Status]);
+    this.scheduledAt = ko.observable();
+    this.scheduledAtMessage = ko.observable();
+
+    this.scheduledAt.subscribe(function () {
+        self.scheduledAtMessage(self.scheduledAt() ? self.getDateFormatted(self.scheduledAt()) : '');
+    });    
+
+    this.scheduledAt(job.ScheduledAt ? new Date(job.ScheduledAt) : null);
 }
 
 function jobsHandler(config) {
@@ -25,7 +44,8 @@ function jobsHandler(config) {
         job
             .progress(notification.Progress)
             .statusId(notification.Status)
-            .statusName(JobsAdmin.jobStatus[notification.Status]);
+            .statusName(JobsAdmin.jobStatus[notification.Status])
+            .scheduledAt(new Date(notification.ScheduledAt));
 
         self
             .logEntries
@@ -33,8 +53,7 @@ function jobsHandler(config) {
                 id: notification.Id,
                 type: JobsAdmin.notificationTypes[notification.NotificationType],
                 message: notification.Message
-            }
-            );
+            });
     };
 
     this.addJob = function (job) {
